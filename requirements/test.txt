@@ -1,0 +1,4 @@
+-r production.txt
+model_mommy
+pytest
+pytest-django
