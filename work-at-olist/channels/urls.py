@@ -9,7 +9,7 @@ app_name = 'channels'
 urlpatterns = [
     url(r'^$', ChannelListAPIView.as_view(), name='list_channels'),
     url(
-        r'^(?P<channel>\w+)/$',
+        r'^(?P<channel>\w+)/categories/$',
         CategoryByChannelListAPIView.as_view(),
         name='list_categories_by_channel'
     ),
