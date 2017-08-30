@@ -72,3 +72,40 @@ class TestCategoryByChannelListAPIView:
 
         assert 2 == len(response.data)
         assert expected == response.data
+
+
+@pytest.mark.django_db
+class TestCategoryAPIView:
+
+    @pytest.fixture(autouse=True)
+    def set_fixtures(self):
+        self.category = mommy.make('channels.Category', name='xpto')
+
+    def setup_method(self, test_method):
+        self.url = reverse(
+            'channels:category_detail',
+            kwargs={'category': 'xpto'},
+        )
+        self.client = APIClient()
+
+    def test_view_get_returns_response_successfully(self):
+        response = self.client.get(self.url)
+
+        assert status.is_success(response.status_code)
+        assert response.data
+
+    def test_view_get_returns_404_when_channel_does_not_exist(self):
+        url = reverse(
+            'channels:category_detail',
+            kwargs={'category': 'test'},
+        )
+
+        response = self.client.get(url)
+        assert status.is_client_error(response.status_code)
+
+    def test_view_get_list_channels_correctly(self):
+        expected = CategorySerializer(self.category).data
+
+        response = self.client.get(self.url)
+
+        assert expected == response.data
